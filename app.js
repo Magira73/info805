@@ -24,6 +24,11 @@ app.use((req, res, next) => {
     next();
   });
 
+
+app.get('/', function(req, res){
+  res.sendfile(__dirname + "/index.html");
+});
+
   
 app.use('/api-soap', (req, res) => {
   soap.createClient(url, function(err, client) {
@@ -52,9 +57,6 @@ app.use('/api-soap', (req, res) => {
 
 })
 
-app.get('/', function(req, res){
-    res.sendfile(__dirname + "/index.html");
-  });
 
 
 module.exports = app;
