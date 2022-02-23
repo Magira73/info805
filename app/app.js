@@ -6,7 +6,6 @@ const soap = require('soap');
 const url = 'http://localhost:8080/?wsdl';
 
 var http = require('http').Server(app);
-var io = require('socket.io')(http);
 
 
 var listVoitures;

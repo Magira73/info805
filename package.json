@@ -5,7 +5,7 @@
   "main": "serveur.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node /app/serveur.js"
+    "start": "node serveur.js"
   },
   "author": "",
   "license": "ISC",
