@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="fr">
 <head>
     <meta charset="UTF-8">
     <link rel="stylesheet" type="text/css" href="menu.css">
@@ -23,17 +23,23 @@
 
 
 
-<body>
+<body onload="init()">
     <div id="fenêtre">
         <div id="nav-bar">
             <h1>Calcul ton itinéraire</h1>
         </div>
         <div id="container">
             <div id="left">
-                <input type="text" name="voiture" id="voiture">
-                <input type="text" name="départ" id="src">
-                <input type="text" name="arriver" id="arriver">
+                <select name="voiture" id="voiture-select">
+                    <option value="">choisissez votre voiture</option>
+                </select>
+                <input type="text" name="départ" id="src" value="départ">
+                <input type="text" name="arriver" id="arriver" value="arrivé">
+                <button onclick="submit()">chercher</button>
+
             </div>
+
+            
 
             <div id="right">
                 <div id="map"></div>
@@ -41,20 +47,8 @@
         </div>
     </div>
 
-   <!-- <button onclick="map()">Affiché</button> -->
+   <button onclick="map()">Affiché</button>
 
-
-
-
-<!--
-    <ul>
-        <li class="menu-deroulant">
-        <a href="#">Voitures</a>
-        <ul class="sous-menu" id="list">
-        </ul>
-        </li>
-    </ul>
--->
     <script src="https://code.jquery.com/jquery-3.6.0.js" integrity="sha256-H+K7U5CnXl1h5ywQfKtSj8PCmoN9aaq30gDh27Xc0jk=" crossorigin="anonymous"></script>
     <script src="index.js"></script> 
 </body>
