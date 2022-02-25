@@ -37,10 +37,9 @@ async function submit(){
 
 //SOAP
 function menuvoiture(){
-    document.location.href="/api-soap";
  /*$.ajax({
      type: "GET",
-     url: urlRest,
+     url: url,
      data: "data",
      dataType: "json",
      success: function (response) {
@@ -53,6 +52,7 @@ function menuvoiture(){
 //MON API REST
 function calculTime() {
     $.ajax({
+        type: "GET",
         url: urlRest + "/helloWorld" ,
         contentType: "application/json",
         dataType: "json",
@@ -140,9 +140,9 @@ function map(depart){
 
 
 //API VILLE 
-async function chercherVille(ville) {
+function chercherVille(ville) {
     var res;
-    await $.ajax({
+    $.ajax({
         url: "https://geo.api.gouv.fr/communes?nom=" + ville + "&fields=centre&format=json&geometry=centre" ,
         contentType: "application/json",
         dataType: "json",
