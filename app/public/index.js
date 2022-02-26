@@ -13,25 +13,90 @@ function init(){
         option += "<option value='" + v[0] + "'>" + voitureL[i][0] + "</option>";
     }
     document.getElementById('voiture-select').innerHTML = option;
+
 }
 
 
 
 //FONCTION POUR RECUPERER LES VALEURS ET CREER LA MAP
-async function submit(){
-    var voiture = document.getElementById("voiture-select").value;
-    var départ = document.getElementById("src").value;    
-    var arriver = document.getElementById("arriver").value;
-    
-    var test ;
-    await chercherVille(départ).then((value) => {
-        test = value;
-        console.log(test);
-      });
-    console.log(test.centre.coordinates[0]);
+$('.ville').on('change keyup paste', function(e){
+    var id  = '#' + this.id;
+    $.ajax({
+        url: "https://geo.api.gouv.fr/communes?nom=" + this.value + "&fields=centre&format=json&geometry=centre" ,
+        contentType: "application/json",
+        dataType: "json",
+        success: function(data){
+            if (data.length != 0) {
+                $(id).attr('data-coords', data[0].centre.coordinates)
+            }
+            var option = "";
+            for (let i = 0; i < 5; i++) {
+                if (data[i]) {
+                    option += "<div class='ville1' data-coords='" + data[i].centre.coordinates + "' name='" + data[i].nom + "'>" + data[i].nom + "</div>";
+                    
+                }
+            }
+            if (id == "#src") {
+                document.getElementById('containerRes1').innerHTML = option;
+            }
+            if (id == "#arriver") {
+                document.getElementById('containerRes2').innerHTML = option;                
+            }
+        }
+    });
+})
 
-    map(test.centre.coordinates)
+$("#containerRes1").on("click", ".ville1", function(e){
+    var data = $(this).attr('data-coords');
+    var nom = $(this).attr('name');
+    $('#src').val(nom)
+    $('#src').attr('data-coords', data)
+    document.getElementById('containerRes1').innerHTML = "";
+})
+
+$("#containerRes2").on("click", ".ville1", function(e){
+    var data = $(this).attr('data-coords');
+    var nom = $(this).attr('name');
+    $('#arriver').val(nom)
+    $('#arrvier').attr('data-coords', data)
+    document.getElementById('containerRes2').innerHTML = "";
+})
+
+
+function submit(){
+    var voiture = document.getElementById("voiture-select").value;
+    var depart = $('#src').attr('data-coords');    
+    var arriver = $('#arriver').attr('data-coords'); 
+
+    map(depart, arriver);
 }
+
+
+$('#submits').on('click', function(e){
+    var voiture = document.getElementById("voiture-select").value;
+    var départ = document.getElementById("src").value;
+    var arriver = document.getElementById("arriver").value;
+
+    if (!voiture) {
+        console.log('err');
+    }
+    if (!départ) {
+        console.log('err');
+    }
+    if (!arriver) {
+        console.log('err');
+    }
+    if (voiture && départ && arriver) {
+        var test ;
+        console.log(départ);
+        chercherVille(départ).then((value) => {
+            test = value;
+            console.log(test);
+        });
+        console.log('test');
+        console.log(test);
+    }
+})
 
 
 
@@ -65,8 +130,8 @@ function calculTime() {
 
 
 
-//MAP LAEFLET
-function map(depart){
+//MAP LEAFLET
+function map(depart, arriver){
 
     //CREATION DE LA MAP (CENTRER FRANCE)
     var map = L.map('map').setView([46.00, 2.00], 6);
@@ -86,12 +151,19 @@ function map(depart){
     //CREATION DE L'ITINERAIRE
     var dir = MQ.routing.directions();
 
-    var departS = depart[0].toString() + ', ' + depart[1].toString();
+    var tmp = depart.split(',');
+    var departS = tmp[1] + ',' + tmp[0];
+    tmp = arriver.split(',');
+    var arriverS = tmp[1] + ',' + tmp[0];
+
+    console.log(departS);
+    console.log(arriverS);
+
 
     dir.route({
         locations: [
-            '45.764670, 5.697158',
-            '45.647817, 5.760518'
+            departS,
+            arriverS
         ]
     });
 
@@ -139,18 +211,5 @@ function map(depart){
 }
 
 
-//API VILLE 
-function chercherVille(ville) {
-    var res;
-    $.ajax({
-        url: "https://geo.api.gouv.fr/communes?nom=" + ville + "&fields=centre&format=json&geometry=centre" ,
-        contentType: "application/json",
-        dataType: "json",
-        success: function(data){
-            res = data[0];
-        }
-    });
-    return res;
-  }
 
 //https://geo.api.gouv.fr/communes?nom=La%20chapelle%20saint%20martin&fields=centre&format=json&geometry=centre

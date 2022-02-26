@@ -30,12 +30,21 @@
         </div>
         <div id="container">
             <div id="left">
+
                 <select name="voiture" id="voiture-select">
                     <option value="">choisissez votre voiture</option>
                 </select>
-                <input type="text" name="départ" id="src" value="départ">
-                <input type="text" name="arriver" id="arriver" value="arrivé">
-                <button onclick="submit()">chercher</button>
+
+                <input type="text" id="src" class="ville" placeholder="départ">
+                    <div id="containerRes1">
+                    </div>
+
+                
+                <input type="text" id="arriver" class="ville" placeholder="arrivé">
+                    <div id="containerRes2">
+                    </div>
+
+                <button id="submit" onclick="submit()">chercher</button>
 
             </div>
 
