@@ -1,5 +1,5 @@
 const urlRest = " http://127.0.0.1:5000/";
-const voitureL = [["Renault Zoe", 395, 3], ["Tesla Model 3", 602, 1.5], ["Volkswagen ID. 3", 425, 1.33], ["Porsche Taycan", 463, 1] ]
+const voitureL = [["Renault Zoe", 395, 3], ["Tesla Model 3", 602, 1.5], ["Volkswagen ID. 3", 425, 1.33], ["Porsche Taycan", 463, 1] ];
 
 
 //FONCTION APPELER AU CHARGEMENT DE LA PAGE
@@ -9,16 +9,16 @@ function init(){
     var option = "<option value=''>choisissez votre voiture</option>";
 
     for (let i = 0; i < voitureL.length; i++) {
-        var v = voitureL[i][0].split(' ');
-        option += "<option value='" + v[0] + "'>" + voitureL[i][0] + "</option>";
+        option += "<option value='" + i + "'>" + voitureL[i][0] + "</option>";
     }
     document.getElementById('voiture-select').innerHTML = option;
-
+    
 }
 
 
 
-//FONCTION POUR RECUPERER LES VALEURS ET CREER LA MAP
+
+//FONCTIONs POUR RECUPERER LES VALEURS ET CREER LA MAP
 $('.ville').on('change keyup paste', function(e){
     var id  = '#' + this.id;
     $.ajax({
@@ -27,7 +27,7 @@ $('.ville').on('change keyup paste', function(e){
         dataType: "json",
         success: function(data){
             if (data.length != 0) {
-                $(id).attr('data-coords', data[0].centre.coordinates)
+                $(id).attr('data-coords', data[0].centre.coordinates);
             }
             var option = "";
             for (let i = 0; i < 5; i++) {
@@ -49,58 +49,43 @@ $('.ville').on('change keyup paste', function(e){
 $("#containerRes1").on("click", ".ville1", function(e){
     var data = $(this).attr('data-coords');
     var nom = $(this).attr('name');
-    $('#src').val(nom)
-    $('#src').attr('data-coords', data)
+    $('#src').val(nom);
+    $('#src').attr('data-coords', data);
     document.getElementById('containerRes1').innerHTML = "";
 })
 
 $("#containerRes2").on("click", ".ville1", function(e){
     var data = $(this).attr('data-coords');
     var nom = $(this).attr('name');
-    $('#arriver').val(nom)
-    $('#arrvier').attr('data-coords', data)
+    $('#arriver').val(nom);
+    $('#arrvier').attr('data-coords', data);
     document.getElementById('containerRes2').innerHTML = "";
 })
 
-
+//CREATION MAP
 function submit(){
     var voiture = document.getElementById("voiture-select").value;
     var depart = $('#src').attr('data-coords');    
-    var arriver = $('#arriver').attr('data-coords'); 
-
-    map(depart, arriver);
-}
-
-
-$('#submits').on('click', function(e){
-    var voiture = document.getElementById("voiture-select").value;
-    var départ = document.getElementById("src").value;
-    var arriver = document.getElementById("arriver").value;
+    var arriver = $('#arriver').attr('data-coords');
 
     if (!voiture) {
         console.log('err');
     }
-    if (!départ) {
+    if (!depart) {
         console.log('err');
     }
     if (!arriver) {
         console.log('err');
     }
-    if (voiture && départ && arriver) {
-        var test ;
-        console.log(départ);
-        chercherVille(départ).then((value) => {
-            test = value;
-            console.log(test);
-        });
-        console.log('test');
-        console.log(test);
+    if (voiture && depart && arriver) {
+        direction(depart, arriver);
     }
-})
+
+}
 
 
 
-//SOAP
+//SOAP RECUPERER LA LISTE DES VOITURE
 function menuvoiture(){
  /*$.ajax({
      type: "GET",
@@ -114,7 +99,8 @@ function menuvoiture(){
 }
 
 
-//MON API REST
+
+//MON API REST POUR FAIRE LES CALCUL DE TRAJET
 function calculTime() {
     $.ajax({
         type: "GET",
@@ -129,13 +115,47 @@ function calculTime() {
 
 
 
+function direction(depart, arriver){
+    /*$.ajax({
+        url: "https://api.openrouteservice.org/v2/directions/driving-car?api_key=5b3ce3597851110001cf62482cdcf7217e5e40d7bffcbb957450014b&start=8.681495,49.41461&end=8.687872,49.420318" ,
+        contentType: "application/json",
+        dataType: "json",
+        success: function(data){
+            console.log(data);
+            map(depart, arriver, data);
+        }
+    });*/
+
+    let request = new XMLHttpRequest();
+
+    request.open('POST', "https://api.openrouteservice.org/v2/directions/driving-car/geojson");
+
+    request.setRequestHeader('Accept', 'application/json, application/geo+json, application/gpx+xml, img/png; charset=utf-8');
+    request.setRequestHeader('Content-Type', 'application/json');
+    request.setRequestHeader('Authorization', '5b3ce3597851110001cf62482cdcf7217e5e40d7bffcbb957450014b');
+
+    request.onreadystatechange = function () {
+        if (this.readyState === 4) {
+            map(depart, arriver, this.response);
+        }
+    };
+
+    const body = '{"coordinates":[['+depart+'],['+arriver+']]}';
+
+    request.send(body);
+
+}
+
+
 
 //MAP LEAFLET
-function map(depart, arriver){
+function map(depart, arriver, data){
 
     //CREATION DE LA MAP (CENTRER FRANCE)
     var map = L.map('map').setView([46.00, 2.00], 6);
     //46.00, 2.00 (france)
+
+
 
     L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token={accessToken}', {
         attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
@@ -146,9 +166,43 @@ function map(depart, arriver){
         accessToken: 'pk.eyJ1IjoiZG9tcG5pZXMiLCJhIjoiY2t6c2t4c2Z1MDNvOTJxbnc2bDZ2dmhhaiJ9.JYoFr37k2d6_Aj-hOTf37g'
     }).addTo(map);
 
+    
+
+    
+    var json = JSON.parse(data);
+    var test = json['features'][0];
+
+    var pathLayer = L.geoJson(test).addTo(map);
+    map.fitBounds(pathLayer.getBounds());
+
+    var custom_icon;
+    var marker;
+
+    var tmp = depart.split(',');
+    var departI = [parseFloat(tmp[1]),parseFloat(tmp[0])];
+    custom_icon = L.icon({
+        iconUrl: 'https://www.mapquestapi.com/staticmap/geticon?uri=poi-red_1.png',
+        iconSize: [20, 29],
+        iconAnchor: [10, 29],
+        popupAnchor: [0, -29]
+    });
+    marker = L.marker(departI, {icon: custom_icon}).addTo(map);
+
+    tmp = arriver.split(',');
+    var arriverI = [parseFloat(tmp[1]),parseFloat(tmp[0])];
+    custom_icon = L.icon({
+        iconUrl: 'https://www.mapquestapi.com/staticmap/geticon?uri=poi-blue_1.png',
+        iconSize: [20, 29],
+        iconAnchor: [10, 29],
+        popupAnchor: [0, -29]
+    });
+    marker = L.marker(arriverI, {icon: custom_icon}).addTo(map);
+    
+    
     //var marker = L.marker([51.5, -0.09]).addTo(map);
 
     //CREATION DE L'ITINERAIRE
+    /*
     var dir = MQ.routing.directions();
 
     var tmp = depart.split(',');
@@ -166,7 +220,7 @@ function map(depart, arriver){
             arriverS
         ]
     });
-
+    
     CustomRouteLayer = MQ.Routing.RouteLayer.extend({
         createStartMarker: function (location, stopNumber) {
             var custom_icon;
@@ -205,11 +259,5 @@ function map(depart, arriver){
         directions: dir,
         fitBounds: true
     }));
-
-    // belley : 45.764670, 5.697158
-    // mdv : 45.647817, 5.760518
+    */
 }
-
-
-
-//https://geo.api.gouv.fr/communes?nom=La%20chapelle%20saint%20martin&fields=centre&format=json&geometry=centre
