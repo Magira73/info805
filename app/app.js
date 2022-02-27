@@ -36,23 +36,11 @@ app.use('/api-soap', (req, res) => {
       client.list_voitures( function(err, response) {
         if (err) console.error(err);
         else {
-          listVoitures = response;
-          console.log(listVoitures);
+          res.send(response);
         }
       });
     }
   });
-  console.log('test');
-
-  /*soap.createClientAsync(url).then((client) => {
-    return client.list_voitures();
-  }).then((result) => {
-    console.log(result);
-  });
-
-  var client = await soap.createClientAsync(url);
-  var result = await client.MyFunctionAsync(args);
-  console.log(await result);*/
 
 })
 

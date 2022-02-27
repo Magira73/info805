@@ -1,20 +1,19 @@
-const urlRest = " http://127.0.0.1:5000/";
-const urlSOAP= " http://127.0.0.1:8080/";
-const voitureL = [["Renault Zoe", 395, 3], ["Tesla Model 3", 602, 1.5], ["Volkswagen ID. 3", 425, 1.33], ["Porsche Taycan", 463, 1] ];
-
+const urlRest= " http://127.0.0.1:5000/";
+const voitureL = [];
 
 //FONCTION APPELER AU CHARGEMENT DE LA PAGE
-function init(){
+async function init(){
 
     //CREATION DE LA LISTE DE VOITURE 
     var option = "<option value=''>choisissez votre voiture</option>";
+
+    await menuvoiture();
 
     for (let i = 0; i < voitureL.length; i++) {
         option += "<option value='" + i + "'>" + voitureL[i][0] + "</option>";
     }
     document.getElementById('voiture-select').innerHTML = option;
 
-    //menuvoiture();
     
 }
 
@@ -118,14 +117,24 @@ function submit(){
 
 //SOAP RECUPERER LA LISTE DES VOITURE
 function menuvoiture(){
- $.ajax({
-     type: "GET",
-     url: urlSOAP,
-     dataType: "json",
-     success: function (response) {
-         console.log(response);
-     }
- });
+    return new Promise((resolve, reject) => {
+        $.ajax({
+            type: "GET",
+            url: "/api-soap",
+            dataType: "json",
+            success: function (response) {
+                var tmp = response['list_voituresResult']['string'];
+                for (let i = 0, j = 0; i < tmp.length; i += 3, j++) {
+                    var voiture = [tmp[i], parseInt(tmp[i+1]), parseFloat(tmp[i+2])];
+                    voitureL[j] = voiture;
+                }
+                resolve('ok')
+            },
+            error: function (error) {
+                reject(error)
+              }
+        });
+    });
 }
 
 
