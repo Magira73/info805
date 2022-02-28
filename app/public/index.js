@@ -1,4 +1,5 @@
 const urlRest= " https://apirest805.herokuapp.com/";
+const urlRestDEV= " http://127.0.0.1:5000/";
 const voitureL = [["Renault Zoe", 395, 3], ["Tesla Model 3", 602, 1.5], ["Volkswagen ID. 3", 425, 1.33], ["Porsche Taycan", 463, 1]];
 
 //["Renault Zoe", 395, 3], ["Tesla Model 3", 602, 1.5], ["Volkswagen ID. 3", 425, 1.33], ["Porsche Taycan", 463, 1] 
@@ -106,7 +107,7 @@ function submit(){
         borne(depart, arriver, res);
 
         var distance = turf.distance(departA, arriverA);
-        calculTime(distance, 1, voitureL[voiture]);
+        calculTime(distance, res.length, voitureL[voiture]);
 
         //var pi = pointInter['geometry']['coordinates'][1].toString() + ',' + pointInter['geometry']['coordinates'][0].toString();
     }
@@ -141,6 +142,7 @@ function menuvoiture(){
 
 //MON API REST POUR FAIRE LES CALCUL DE TRAJET
 function calculTime(distance, nbArret, voiture) {
+    console.log(nbArret);
     $.ajax({
         type: "GET",
         url: urlRest + "calculTime/"+ distance +"/"+ nbArret +"/" + voiture[2],
