@@ -1,6 +1,6 @@
 const urlRest= " https://apirest805.herokuapp.com/";
 const urlRestDEV= " http://127.0.0.1:5000/";
-const voitureL = [["Renault Zoe", 395, 3], ["Tesla Model 3", 602, 1.5], ["Volkswagen ID. 3", 425, 1.33], ["Porsche Taycan", 463, 1]];
+const voitureL = [];
 
 //["Renault Zoe", 395, 3], ["Tesla Model 3", 602, 1.5], ["Volkswagen ID. 3", 425, 1.33], ["Porsche Taycan", 463, 1] 
 
@@ -10,7 +10,7 @@ async function init(){
     //CREATION DE LA LISTE DE VOITURE 
     var option = "<option value=''>choisissez votre voiture</option>";
 
-    //await menuvoiture();
+    await menuvoiture();
 
     for (let i = 0; i < voitureL.length; i++) {
         option += "<option value='" + i + "'>" + voitureL[i][0] + "</option>";
@@ -142,7 +142,6 @@ function menuvoiture(){
 
 //MON API REST POUR FAIRE LES CALCUL DE TRAJET
 function calculTime(distance, nbArret, voiture) {
-    console.log(nbArret);
     $.ajax({
         type: "GET",
         url: urlRest + "calculTime/"+ distance +"/"+ nbArret +"/" + voiture[2],
