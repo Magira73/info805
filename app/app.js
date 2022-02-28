@@ -30,18 +30,20 @@ app.get('/', function(req, res){
 
   
 app.use('/api-soap', (req, res) => {
+  console.log('here');
   soap.createClient(url, function(err, client) {
     if (err) console.error(err);
     else {
       client.list_voitures( function(err, response) {
         if (err) console.error(err);
         else {
+          console.log('test');
           res.send(response);
         }
       });
     }
   });
-
+  console.log('ici');
 })
 
 
