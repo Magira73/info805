@@ -282,8 +282,6 @@ async function borne(depart, arriver, tabPoint){
             console.log(error);
         }
     }
-    document.getElementById('time').innerHTML += " avec " + tabPoint.length + " arrêt au maximum";
-    console.log(res);
     direction(depart, arriver, res);
 }
 
