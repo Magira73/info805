@@ -1,5 +1,5 @@
 const urlRest= " http://127.0.0.1:5000/";
-const voitureL = [];
+const voitureL = [["Renault Zoe", 395, 3], ["Tesla Model 3", 602, 1.5], ["Volkswagen ID. 3", 425, 1.33], ["Porsche Taycan", 463, 1] ]
 
 //FONCTION APPELER AU CHARGEMENT DE LA PAGE
 async function init(){
@@ -7,7 +7,7 @@ async function init(){
     //CREATION DE LA LISTE DE VOITURE 
     var option = "<option value=''>choisissez votre voiture</option>";
 
-    await menuvoiture();
+    //await menuvoiture();
 
     for (let i = 0; i < voitureL.length; i++) {
         option += "<option value='" + i + "'>" + voitureL[i][0] + "</option>";
@@ -16,8 +16,6 @@ async function init(){
 
     
 }
-
-
 
 
 //FONCTIONs POUR RECUPERER LES VALEURS ET CREER LA MAP
@@ -149,7 +147,7 @@ function calculTime(distance, nbArret, voiture) {
         success: function(data){
             var time = convertNumToTime(data['time']);
 
-            document.getElementById('info').innerHTML = "<div id='time'>"+ time +"</div>";
+            document.getElementById('info').innerHTML = "<div id='time'>Le trajet prendra environ "+ time +"</div>";
         }
     });
   }
@@ -282,6 +280,7 @@ async function borne(depart, arriver, tabPoint){
             console.log(error);
         }
     }
+    document.getElementById('time').innerHTML += " avec " + tabPoint.length + " arrêt au maximum";
     console.log(res);
     direction(depart, arriver, res);
 }

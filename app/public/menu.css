@@ -24,20 +24,63 @@ body, html{
 }
 
 #left{
-  background-color: rgb(212, 0, 255);
   height: 100%;
   width: 100%;
+  display: flex;
+  flex-direction: column;
 }
 
-
 #right{
-  background-color: rgb(255, 0, 0);
+  background-color: rgb(189, 188, 188);
   height: 100%;
   width: 100%;
+  border: solid;
 }
 
 input{
   margin: 10px;
 }
 
-#map { height: 100%; }
+#map { 
+  height: 100%;
+  position: relative;
+}
+
+img{
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%,-50%);
+  height: 20%;
+}
+
+#form{
+  margin-top: 100px;
+  flex: 1;
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  justify-content: center;
+}
+
+#form > * {
+  margin-left: 10px;
+  margin-right: 10px;
+}
+
+#submit{
+  flex: 1;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+
+}
+
+#info{
+  flex: 3;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+}
+
+

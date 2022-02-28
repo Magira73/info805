@@ -33,21 +33,32 @@
         <div id="container">
             <div id="left">
 
-                <select name="voiture" id="voiture-select">
-                    <option value="">choisissez votre voiture</option>
-                </select>
-
-                <input type="text" id="src" class="ville" placeholder="départ" autocomplete="off">
-                    <div id="containerRes1">
+                <div id="form">
+                    <div id="1">
+                        <select name="voiture" id="voiture-select">
+                            <option value="">choisissez votre voiture</option>
+                        </select>
                     </div>
-
+                    
+                    <div id="2">
+                        <input type="text" id="src" class="ville" placeholder="départ" autocomplete="off">
+                        <div id="containerRes1">
+                        </div>
+                    </div>
+                    
+    
+                    <div id="3">
+                        <input type="text" id="arriver" class="ville" placeholder="arrivé" autocomplete="off">
+                        <div id="containerRes2">
+                        </div>
+                    </div>
+                </div>
                 
-                <input type="text" id="arriver" class="ville" placeholder="arrivé" autocomplete="off">
-                    <div id="containerRes2">
-                    </div>
-
-                <button id="submit" onclick="submit()">chercher</button>
-                <button id="test" onclick="borne()">borne</button>
+                
+                <div id="submit">
+                    <button class="btn btn-outline-dark" onclick="submit()">chercher</button>
+                </div>
+                
 
                 <div id="info"></div>
 
@@ -56,12 +67,12 @@
             
 
             <div id="right">
-                <div id="map"></div>
+                <div id="map">
+                    <img src="/image/carte.png" alt="">
+                </div>
             </div>
         </div>
     </div>
-
-   <button onclick="map()">Affiché</button>
 
     <script src="https://code.jquery.com/jquery-3.6.0.js" integrity="sha256-H+K7U5CnXl1h5ywQfKtSj8PCmoN9aaq30gDh27Xc0jk=" crossorigin="anonymous"></script>
     <script src="index.js"></script> 
