@@ -3,7 +3,7 @@ const express = require('express');
 const app = express();
 
 const soap = require('soap');
-const url = 'https://apisoap805.herokuapp.com/';
+const url = 'https://apisoap805.herokuapp.com/?wsdl';
 
 var http = require('http').Server(app);
 
