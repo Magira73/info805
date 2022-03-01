@@ -1,8 +1,6 @@
 const urlRest= " https://apirest805.herokuapp.com/";
-const urlRestDEV= " http://127.0.0.1:5000/";
 const voitureL = [];
 
-//["Renault Zoe", 395, 3], ["Tesla Model 3", 602, 1.5], ["Volkswagen ID. 3", 425, 1.33], ["Porsche Taycan", 463, 1] 
 
 //FONCTION APPELER AU CHARGEMENT DE LA PAGE
 async function init(){
@@ -21,7 +19,7 @@ async function init(){
 }
 
 
-//FONCTIONs POUR RECUPERER LES VALEURS ET CREER LA MAP
+//AUTO-COMPLETION POUR LES VILLES
 $('.ville').on('change keyup paste', function(e){
     var id  = '#' + this.id;
     $.ajax({
@@ -65,7 +63,7 @@ $("#containerRes2").on("click", ".ville1", function(e){
     document.getElementById('containerRes2').innerHTML = "";
 })
 
-//CREATION MAP
+//FONCTION POUR RECUPERER LES INFORMATIONS ET APPLER LES PROCHAINS FONCTION
 function submit(){
     var voiture = document.getElementById("voiture-select").value;
     var depart = $('#src').attr('data-coords');    
@@ -92,9 +90,11 @@ function submit(){
         var res = [];
         var i = 0;
         var pointTmp = departA;
+
+        //CREATION DE TOUT LES POINTS INTERMEDIAIRE (EMPLACEMENT DES BORNES)
         while (turf.distance(pointTmp, arriverA) > distance50) {
             var line = turf.lineString([pointTmp, arriverA]);
-            var along = turf.along(line, distance50);
+            var along = turf.along(line, distance50); //RENVOIE UN POINT SUR UN TRAJET A UNE DISTANCE DONNEE
 
             alongTmp = [along['geometry']['coordinates'][0], along['geometry']['coordinates'][1]];
             
@@ -108,8 +108,6 @@ function submit(){
 
         var distance = turf.distance(departA, arriverA);
         calculTime(distance, res.length, voitureL[voiture]);
-
-        //var pi = pointInter['geometry']['coordinates'][1].toString() + ',' + pointInter['geometry']['coordinates'][0].toString();
     }
 
 }
@@ -140,7 +138,7 @@ function menuvoiture(){
 
 
 
-//MON API REST POUR FAIRE LES CALCUL DE TRAJET
+//MON API REST POUR FAIRE LES CALCUL DE TEMPS DE TRAJET
 function calculTime(distance, nbArret, voiture) {
     $.ajax({
         type: "GET",
@@ -176,7 +174,7 @@ function convertNumToTime(number) {
 }
 
 
-//CREATION DE L'ITINERAIRE
+//CREATION DE L'ITINERAIRE AVEC TOUS LES EMPLACEMENT DES BORNE ELEC
 function direction(depart, arriver, pointInter){
 
     let request = new XMLHttpRequest();
@@ -233,6 +231,9 @@ function map(depart, arriver, pointInter, data){
     var pathLayer = L.geoJson(test).addTo(map);
     map.fitBounds(pathLayer.getBounds());
 
+
+    //CREATION DES DIFFERENTS MARQUEURS
+
     var custom_icon;
 
     var tmp = depart.split(',');
@@ -255,7 +256,7 @@ function map(depart, arriver, pointInter, data){
     });
     marker = L.marker(arriverI, {icon: custom_icon}).addTo(map);
 
-
+    //LISTE DES MARQUEURS INTERMEDIAIRE
     for (let i = 0; i < pointInter.length; i++) {
         var pointInterI = [pointInter[i]['ylatitude'],pointInter[i]['xlongitude']];
         custom_icon = L.icon({
